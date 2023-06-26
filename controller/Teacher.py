@@ -137,6 +137,7 @@ def updateTeacher(id):
   
 @app.route("/deleteTeacher/<int:id>",methods=["DELETE"])
 def deleteTeacher(id):
+  print("sadas")
   token=session.get("token")
   role=session.get("role")
   cur=db.cursor()
