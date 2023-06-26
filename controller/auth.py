@@ -31,7 +31,8 @@ print(secret_key)
 
 app.config['JWT_SECRET_KEY'] = f'{secret_key}' 
 app.secret_key = f'{secret_key}'
-app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(seconds=9800)
+# app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(seconds=9800)
+app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(minutes=30)
 
 
 

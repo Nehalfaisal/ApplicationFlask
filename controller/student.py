@@ -27,11 +27,19 @@ def insertStudent():
 
     if(name and std_class and course and birthdate and contact and age and gender): 
       cur = db.cursor()
-      query = "INSERT INTO student (name,Std_class,courses, birthdate, contact, age, gender,email) VALUES (%s, %s, %s, %s, %s, %s,%s,%s)"
-      values = (name,std_class, course, birthdate, contact, age, gender,email)
-      cur.execute(query, values)
-      db.commit()
-      return jsonify({"message":"student inserted success"}),200
+      sql = "SELECT * FROM student WHERE email = %s"
+      cur.execute(sql, (email,))
+      student = cur.fetchone()
+      print(student)
+      if(student):
+        return jsonify({"message":"the email is already exist with other student"})
+      else:  
+        query = "INSERT INTO student (name,Std_class,courses, birthdate, contact, age, gender,email) VALUES (%s, %s, %s, %s, %s, %s,%s,%s)"
+        values = (name,std_class, course, birthdate, contact, age, gender,email)
+        cur.execute(query, values)
+        db.commit()
+        return jsonify({"message":"student inserted success"}),200
+      
     else:
         return jsonify({"message":"provide all input"}),404
   else:

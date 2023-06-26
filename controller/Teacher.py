@@ -25,14 +25,21 @@ def insertTeahcer():
       joining_date=request.json.get("joining_date")
       email=request.json.get("email")
       print(name,teaching_course,section,age,gender,joining_date,email)
-    
-      if(name and teaching_course and section and age and gender and joining_date and email): 
+      
+      if(name and teaching_course and section and age and gender and joining_date and email):
         cur = db.cursor()
-        query = "INSERT INTO teacher (name,teaching_course,section, age, gender,joining_date,email) VALUES (%s, %s, %s, %s, %s, %s,%s)"
-        values = (name,teaching_course, section, age, gender,joining_date,email)
-        cur.execute(query, values)
-        db.commit()
-        return jsonify({"message":"teacher inserted success"}),200
+        sql = "SELECT * FROM teacher WHERE email = %s"
+        cur.execute(sql, (email,))
+        teacher = cur.fetchone()
+        if(teacher):
+          return jsonify({"message":"the email is already exist with other teacher"})
+        else:
+          cur = db.cursor()
+          query = "INSERT INTO teacher (name,teaching_course,section, age, gender,joining_date,email) VALUES (%s, %s, %s, %s, %s, %s,%s)"
+          values = (name,teaching_course, section, age, gender,joining_date,email)
+          cur.execute(query, values)
+          db.commit()
+          return jsonify({"message":"teacher inserted success"}),200
       else:
           return jsonify({"message":"provide all input"}),404
     else:
