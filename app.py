@@ -1,10 +1,10 @@
 from flask import Flask
 import mysql.connector;
-from flask_cors import CORS
+# from flask_cors import CORS
 
 
 app=Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+# CORS(app)  # Enable CORS for all routes
 
 
 
