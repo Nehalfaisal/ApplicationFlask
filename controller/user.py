@@ -11,8 +11,6 @@ import uuid
 import random
 
 
-
-
 bcrypt = Bcrypt(app)
 
 jwt = JWTManager(app)
@@ -37,23 +35,27 @@ app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(seconds=60)
 
 @app.route("/getAll",methods=["GET"])
 def userdata():
-  
+  print("print")
   token=session.get("token")
   role=session.get("role")
-  if(role=="Admin"):
-      if(role=="Admin" and token):
-      
-        cursor = db.cursor()
-      
-        cursor.execute("SELECT * FROM user")
+  if(token):
+    if(role=="Admin"):
+        if(role=="Admin" and token):
+        
+          cursor = db.cursor()
+        
+          cursor.execute("SELECT * FROM user")
 
-        userData = cursor.fetchall()
-        print(userData)      
-        return jsonify({"data":userData}),200 
-      else:
-          return jsonify({"messages":"you have dont have  access"}),200 
+          userData = cursor.fetchall()
+          print(userData)      
+          return jsonify({"data":userData}),200 
+        else:
+            return jsonify({"messages":"you have dont have  access"}),200 
+    else:
+      return jsonify({"Alert":"You dont have admin rights"}),401 
   else:
-    return jsonify({"Alert":"You dont have admin rights"}),401      
+    return jsonify({"message":"session time out"})
+         
 
 
  
@@ -122,17 +124,28 @@ def delete(id):
   token=session.get("token")
   role=session.get("role")
   cur=db.cursor()
-  if(token):       
-    if(role=="Admin"):
+  sql = "SELECT * FROM user WHERE id = %s"
+  cur.execute(sql, (id,))
+  user=cur.fetchone()
+  print("USER IS EXIST ")
+  print(user)
+  if(token): 
+    if(user):      
+      if(role=="Admin"):
 
-        
-      cur.execute("DELETE FROM user WHERE id = %s", (id,))
-      db.commit()
-      return jsonify({"messages":"user deleted success"}),200  
+          
+        cur.execute("DELETE FROM user WHERE id = %s", (id,))
+        db.commit()
+        return jsonify({"messages":"user deleted success"}),200  
+      else:
+        return jsonify({"message":"Only Admin can update"})
     else:
-      return jsonify({"message":"Only Admin can update"}) 
+       return jsonify({"message":"user does not exist"}),440
+         
   else:
      return jsonify({"message":"session time out"}),440
+
+    
 
    
   

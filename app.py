@@ -22,9 +22,9 @@ if db.is_connected():
 else:
     print("Failed to connect to the MySQL database.")
 
-@app.route("/")
+@app.route("/app")
 def home():
-  return "wokring"
+  return "Api is working "
 
 
 from controller import auth,user,student,Teacher

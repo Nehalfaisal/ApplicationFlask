@@ -9,10 +9,18 @@ from flask_session import Session
 import datetime
 import uuid
 import random
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+from flask_caching import Cache
 
 
-
-
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["200 per day", "50 per hour"],
+    storage_uri="memory://",
+)
+cache = Cache(app)
 bcrypt = Bcrypt(app)
 
 jwt = JWTManager(app)
@@ -36,9 +44,11 @@ app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(minutes=30)
 
 
 
-
 @app.route("/signUp", methods=['POST'])
+@limiter.limit("1 per day")
+@cache.cached(timeout=60)
 def singUp():
+    print("working")
     name = request.json.get('name')
     email=request.json.get("email")
     password = request.json.get('password')
