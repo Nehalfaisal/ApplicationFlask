@@ -10,10 +10,12 @@ app=Flask(__name__)
 
 # MySQL Database Configuration
 db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="s4smart12@A",
-    database="school_management"
+    host="127.0.0.1",
+    user="appuser",
+    password="s4smart12",
+    database="school_management",
+
+
 )
 
 # Check database connection
